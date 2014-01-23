@@ -1,0 +1,41 @@
+---
+modules:
+
+    hammer:
+        module: metricfactory.test.hammer
+        arguments:
+            batch: 0
+            batch_size: 100
+            set_size: 100
+            value: 1000
+
+    bucket:
+        module: wishbone.builtin.flow.tippingbucket
+        arguments:
+            events: 1000
+
+    encodegraphite:
+        module: wishbone.builtin.metrics.graphite
+        arguments:
+            pickle: True
+
+    tcp:
+        module: wishbone.output.tcp_parallel
+        arguments:
+            host: 162.243.15.93
+#            host: localhost
+            port: 2004
+            delimiter: ''
+#            failed: True
+            timeout: 15
+
+    stdout:
+        module: wishbone.builtin.output.stdout
+
+routingtable:
+
+    - hammer.outbox             -> bucket.inbox
+    - bucket.outbox             -> encodegraphite.inbox
+    - encodegraphite.outbox     -> tcp.inbox
+#    - tcp.failed                -> stdout.inbox
+...
