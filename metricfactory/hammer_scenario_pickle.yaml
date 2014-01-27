@@ -22,10 +22,10 @@ modules:
     tcp:
         module: wishbone.output.tcp_parallel
         arguments:
-            host: 162.243.15.93
-#            host: localhost
+#            host: 162.243.15.93
+            host: localhost
             port: 2004
-            delimiter: ''
+#            delimiter: ''
 #            failed: True
             timeout: 15
 
