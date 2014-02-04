@@ -12,7 +12,7 @@ modules:
     bucket:
         module: wishbone.builtin.flow.tippingbucket
         arguments:
-            events: 1000
+            age: 3
 
     encodegraphite:
         module: wishbone.builtin.metrics.graphite
@@ -20,7 +20,7 @@ modules:
             pickle: True
 
     tcp:
-        module: wishbone.output.tcp_parallel
+        module: wishbone.output.tcp
         arguments:
 #            host: 162.243.15.93
             host: localhost
@@ -36,6 +36,7 @@ routingtable:
 
     - hammer.outbox             -> bucket.inbox
     - bucket.outbox             -> encodegraphite.inbox
+#    - hammer.outbox             -> encodegraphite.inbox
     - encodegraphite.outbox     -> tcp.inbox
 #    - tcp.failed                -> stdout.inbox
 ...
