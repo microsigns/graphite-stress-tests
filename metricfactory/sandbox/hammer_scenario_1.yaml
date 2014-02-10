@@ -1,3 +1,9 @@
+# This scenario generates a single batch of 100 sets of 100 metrics with a
+# maximum value of 1000 and sends them to localhost:2003 in graphite's plain
+# text format
+
+# the metrics will be named
+# hammer.metricfactory.hammer.set_<1 to 100>.metric_<1 to 100>
 ---
 modules:
 
@@ -15,7 +21,7 @@ modules:
   tcp:
     module: wishbone.output.tcp
     arguments:
-      host: 162.243.15.93
+      host: graphite-0001
       port: 2003
       failed: True
 

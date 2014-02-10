@@ -1,3 +1,11 @@
+# This scenario generates infinite batches of 100 sets of 100 metrics of up to
+# 1000 in value. Notice the batch: 0 argument passed to the hammer module, this
+# means infinite batches, and thus, it will run until killed with Ctrl-C
+
+# The metrics will be sent in graphite plaintext format to graphite-0001:2003.
+# Any metrics which fail to be sent will be retried after 1 second. If the
+# commented lines in this scenario are uncommented, these failed packets will
+# be printed to stdout and dropped instead.
 ---
 modules:
 
@@ -16,14 +24,15 @@ modules:
   tcp:
     module: wishbone.output.tcp
     arguments:
-      # host: 162.243.15.93
-      host: localhost
+      host: graphite-0001
       port: 2003
+      # failed: True
 
-  stdout:
-    module: wishbone.builtin.output.stdout
+  # stdout:
+    # module: wishbone.builtin.output.stdout
 
 routingtable:
   - hammer.outbox             -> encodegraphite.inbox
   - encodegraphite.outbox     -> tcp.inbox
+  # - tcp.failed                -> stdout.inbox
 ...

@@ -1,3 +1,10 @@
+# this scenario is the same as hammer_scenario_3.yaml except it uses the pickle
+# graphite format.
+#
+# To do this, it uses the tippingbucket wishbone module which accumulates
+# the metrics until one of the possible triggers is met. See the comments below
+# for details
+
 ---
 modules:
 
@@ -10,9 +17,24 @@ modules:
       value: 1000
 
   bucket:
+    ## this module accumulates events until one of the three triggers below
+    ## is fired, and then flushes all accumulated events as a single event with
+    ## a list. This is what the pickle version of the graphite module expects
+    ## as input.
+    ##
+    ## To disable a trigger, a value of 0 (default) must be passed as an
+    ## argument. In this case the buffer will be flushed when 256 events have
+    ## accumulated. This is the default in diamond's graphite pickle handler
     module: wishbone.builtin.flow.tippingbucket
     arguments:
-      age: 3
+      ## number of events (metrics) before flushing
+      events: 256
+      ## age of buffer before flushing in seconds
+      # age: 10
+      ## size in bytes of buffer before flussing in seconds (this is tricky
+      ## since what gets passed in the case of metrics are 7-tuples, the
+      ## measuring here fails, and this ends up being just events / 7)
+      # size: 256
 
   encodegraphite:
     module: wishbone.builtin.metrics.graphite
@@ -22,21 +44,18 @@ modules:
   tcp:
     module: wishbone.output.tcp
     arguments:
-      # host: 162.243.15.93
-      host: localhost
+      host: graphite-0001
       port: 2004
-      # delimiter: ''
+      delimiter: ''
       # failed: True
-      timeout: 15
 
-  stdout:
-    module: wishbone.builtin.output.stdout
+  # stdout:
+    # module: wishbone.builtin.output.stdout
 
 routingtable:
 
   - hammer.outbox             -> bucket.inbox
   - bucket.outbox             -> encodegraphite.inbox
-  # - hammer.outbox             -> encodegraphite.inbox
   - encodegraphite.outbox     -> tcp.inbox
   # - tcp.failed                -> stdout.inbox
 ...

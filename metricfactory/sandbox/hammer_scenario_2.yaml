@@ -1,3 +1,8 @@
+# this scenario will create 10 batches of 100 sets of 100 metrics each, for a
+# total of 100000000 metrics, and fan them out to two different graphite
+# instances. The funnel and balance modules are used for balance loading
+# between the graphite servers
+
 ---
 metrics:
   graphite:
