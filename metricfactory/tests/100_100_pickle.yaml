@@ -1,0 +1,38 @@
+---
+modules:
+
+  hammer:
+    module: metricfactory.test.hammer
+    arguments:
+      batch: 0
+      batch_size: 100
+      set_size: 100
+      value: 1000
+
+  bucket:
+    module: wishbone.builtin.flow.tippingbucket
+    arguments:
+      age: 3
+
+  encodegraphite:
+    module: wishbone.builtin.metrics.graphite
+    arguments:
+      pickle: True
+
+  tcp:
+    module: wishbone.output.tcp
+    arguments:
+      host: THE GRAPHITE SERVER'S IP GOES HERE
+      port: 2004
+
+  stdout:
+    module: wishbone.builtin.output.stdout
+
+routingtable:
+
+  - hammer.outbox             -> bucket.inbox
+  - bucket.outbox             -> encodegraphite.inbox
+  # - hammer.outbox             -> encodegraphite.inbox
+  - encodegraphite.outbox     -> tcp.inbox
+  # - tcp.failed                -> stdout.inbox
+...
