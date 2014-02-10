@@ -1,3 +1,7 @@
+# this test scenario will send infinite batches of 100 sets of 100 metrics
+# (10000 unique metrics in repeated batches) and will pickle and send them over
+# the wire every 256 metrics. 
+
 ---
 modules:
 
@@ -12,7 +16,7 @@ modules:
   bucket:
     module: wishbone.builtin.flow.tippingbucket
     arguments:
-      age: 3
+      events: 256
 
   encodegraphite:
     module: wishbone.builtin.metrics.graphite
@@ -22,17 +26,15 @@ modules:
   tcp:
     module: wishbone.output.tcp
     arguments:
-      host: THE GRAPHITE SERVER'S IP GOES HERE
+      #host: THE GRAPHITE SERVER'S IP GOES HERE
+      host: localhost
       port: 2004
 
   stdout:
     module: wishbone.builtin.output.stdout
 
 routingtable:
-
   - hammer.outbox             -> bucket.inbox
   - bucket.outbox             -> encodegraphite.inbox
-  # - hammer.outbox             -> encodegraphite.inbox
   - encodegraphite.outbox     -> tcp.inbox
-  # - tcp.failed                -> stdout.inbox
 ...

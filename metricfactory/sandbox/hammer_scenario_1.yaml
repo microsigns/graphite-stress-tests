@@ -22,6 +22,7 @@ modules:
     module: wishbone.output.tcp
     arguments:
       host: graphite-0001
+      host: localhost
       port: 2003
       failed: True
 

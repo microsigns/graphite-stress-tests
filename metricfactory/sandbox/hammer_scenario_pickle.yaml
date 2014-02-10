@@ -44,6 +44,7 @@ modules:
   tcp:
     module: wishbone.output.tcp
     arguments:
+      # host: localhost
       host: graphite-0001
       port: 2004
       delimiter: ''
