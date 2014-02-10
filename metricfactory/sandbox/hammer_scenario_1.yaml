@@ -1,26 +1,26 @@
 ---
 modules:
 
-    hammer:
-        module: metricfactory.test.hammer
-        arguments:
-            batch: 1
-            batch_size: 100
-            set_size: 100
-            value: 1000
+  hammer:
+    module: metricfactory.test.hammer
+    arguments:
+      batch: 1
+      batch_size: 100
+      set_size: 100
+      value: 1000
 
-    encodegraphite:
-        module: wishbone.builtin.metrics.graphite
+  encodegraphite:
+    module: wishbone.builtin.metrics.graphite
 
-    tcp:
-        module: wishbone.output.tcp
-        arguments:
-            host: 162.243.15.93
-            port: 2003
-            failed: True
+  tcp:
+    module: wishbone.output.tcp
+    arguments:
+      host: 162.243.15.93
+      port: 2003
+      failed: True
 
 routingtable:
 
-    - hammer.outbox             -> encodegraphite.inbox
-    - encodegraphite.outbox     -> tcp.inbox
+  - hammer.outbox             -> encodegraphite.inbox
+  - encodegraphite.outbox     -> tcp.inbox
 ...

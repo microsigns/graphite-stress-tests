@@ -5,53 +5,53 @@ metrics:
 
 modules:
 
-    hammer:
-        module: metricfactory.test.hammer
-          arguments:
-            batch: 10
-            batch_size: 100
-            set_size: 100
-            value: 1000
-            sleep: 1
+  hammer:
+    module: metricfactory.test.hammer
+    arguments:
+      batch: 10
+      batch_size: 100
+      set_size: 100
+      value: 1000
+      sleep: 1
 
-    encodegraphite:
-        module: wishbone.builtin.metrics.graphite
+  encodegraphite:
+    module: wishbone.builtin.metrics.graphite
+    
+  funnel:
+    module: wishbone.builtin.flow.funnel
 
-    funnel:
-        module: wishbone.builtin.flow.funnel
+  balance:
+    module: wishbone.builtin.flow.roundrobin
 
-    balance:
-        module: wishbone.builtin.flow.roundrobin
+  tcp1:
+    module: wishbone.output.tcp
+    arguments:
+      host: graphite-001
+      port: 2013
 
-    tcp1:
-        module: wishbone.output.tcp
-        arguments:
-            host: graphite-001
-            port: 2013
-
-    tcp2:
-        module: wishbone.output.tcp
-        arguments:
-            host: graphite-002
-            port: 2013
-
-    metrics_out:
-        module: wishbone.output.tcp
-        arguments:
-            host: graphite-001
-            port: 2013
+  tcp2:
+    module: wishbone.output.tcp
+    arguments:
+      host: graphite-002
+      port: 2013
+      
+  metrics_out:
+    module: wishbone.output.tcp
+    arguments:
+      host: graphite-001
+      port: 2013
 
 routingtable:
 
-    - hammer.outbox             -> encodegraphite.inbox
-    - encodegraphite.outbox     -> funnel.two
+  - hammer.outbox             -> encodegraphite.inbox
+  - encodegraphite.outbox     -> funnel.two
+  
+  - funnel.outbox             -> balance.inbox
+  - balance.one               -> tcp1.inbox
+  - balance.two               -> tcp2.inbox
+    
+  - tcp1.failed               -> funnel.one
+  - tcp2.failed               -> funnel.three
 
-    - funnel.outbox             -> balance.inbox
-    - balance.one               -> tcp1.inbox
-    - balance.two               -> tcp2.inbox
-
-    - tcp1.failed               -> funnel.one
-    - tcp2.failed               -> funnel.three
-
-    - graphite.outbox           -> metrics_out.inbox
+  - graphite.outbox           -> metrics_out.inbox
 ...

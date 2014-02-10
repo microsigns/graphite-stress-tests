@@ -1,35 +1,35 @@
 ---
 modules:
 
-    hammer:
-        module: metricfactory.test.hammer
-        arguments:
-            batch: 0
-            batch_size: 100
-            set_size: 100
-            value: 1000
+  hammer:
+    module: metricfactory.test.hammer
+    arguments:
+      batch: 0
+      batch_size: 100
+      set_size: 100
+      value: 1000
 
-    bucket:
-        module: wishbone.builtin.flow.tippingbucket
-        arguments:
-            events: 128
+  bucket:
+    module: wishbone.builtin.flow.tippingbucket
+    arguments:
+      events: 128
 
-    encodegraphite:
-        module: wishbone.builtin.metrics.graphite
+  encodegraphite:
+    module: wishbone.builtin.metrics.graphite
+    
+  tcp:
+    module: wishbone.output.tcp
+    arguments:
+      host: localhost
+      port: 2003
 
-    tcp:
-        module: wishbone.output.tcp
-        arguments:
-            host: localhost
-            port: 2003
-
-    stdout:
-        module: wishbone.builtin.output.stdout
+  stdout:
+    module: wishbone.builtin.output.stdout
 
 routingtable:
 
-    - hammer.outbox             -> encodegraphite.inbox
-    - encodegraphite.outbox     -> bucket.inbox
-    - bucket.outbox             -> tcp.inbox
-#    - tcp.failed                -> stdout.inbox
+  - hammer.outbox             -> encodegraphite.inbox
+  - encodegraphite.outbox     -> bucket.inbox
+  - bucket.outbox             -> tcp.inbox
+  # - tcp.failed                -> stdout.inbox
 ...
