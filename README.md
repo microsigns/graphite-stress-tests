@@ -46,5 +46,5 @@ metricfactory debug --config metricfactory/tests/100_100_infinite_pickle.yaml
 
 The only necessary tweaking should be changing the graphite server's ip address
 
-metricfactory: https://github.com/smetj/metricfactory
-wishbone: https://wishbone.readthedocs.org/en/latest/
+[metricfactory]: https://github.com/smetj/metricfactory
+[wishbone]: https://wishbone.readthedocs.org/en/latest/
