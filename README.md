@@ -48,7 +48,7 @@ subdirectory yet.
 Then, to run the tests, e.g.:
 
 ```
-metricfactory debug --config metricfactory/tests/100_100_infinite_pickle.yaml
+metricfactory debug --config metricfactory/tests/inf_100_100_pickle.yaml
 ```
 
 The only necessary tweaking should be changing the graphite server's ip address
@@ -58,7 +58,7 @@ To run multiple (8 in this example) instances in parallel (different processes)
 run
 
 ```
-metricfactory debug --instances 8 --config metricfactory/tests/100_100_infinite_pickle.yaml
+metricfactory debug --instances 8 --config metricfactory/tests/inf_100_100_pickle.yaml
 ```
 
 [metricfactory]: https://github.com/smetj/metricfactory
