@@ -1,6 +1,21 @@
 # this test scenario will send infinite batches of 100 sets of 100 metrics
 # (10000 unique metrics in repeated batches) and will pickle and send them over
-# the wire every 256 metrics. 
+# the wire every 256 metrics.
+#
+# There seems to be a fine balance between the frequency of connection drops
+# and the number of metrics sent per packet. 256 metrics is the default value
+# in diamond's pickle handler, with which I was sending a steady ~270k metrics
+# a minute. I got good results with 1024 metrics, with a peak of almost 600k
+# metrics a minute and a mean of ~400k. With 2048 metrics per packet, the rate
+# drops to 200k a minute.
+#
+# All of these results were achieved running both carbon and the tests locally,
+# with a single carbon-cache process and 8 test instances on a quad-core box.
+# Since the tests were run locally, they're most probably not representative
+# of the best values to use in a production environment. My recomendation is to
+# bring them up in powers of two (1024, 2048, 4096, and so forth) from a single
+# machine until the limit is reached for processed metrics
+
 
 ---
 modules:
@@ -26,8 +41,7 @@ modules:
   tcp:
     module: wishbone.output.tcp
     arguments:
-      #host: THE GRAPHITE SERVER'S IP GOES HERE
-      host: localhost
+      host: THE GRAPHITE SERVER'S IP GOES HERE
       port: 2004
 
   stdout:
