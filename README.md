@@ -36,15 +36,23 @@ To run these tests, install the requirements by running
 
 ```
 pip install -r metricfactory/requirements.txt
+./metricfactory/install-wishbone-modules.sh
 ```
 
-and then run e.g.:
+Make sure to have your virtualenv activated before running any of those
+commands if you're using one. The `install-wishbone-modules.sh` script is
+necessary because the wishboneModules repository provides a number of different
+python packages, not just one, and pip doesn't support installing from a repo
+subdirectory yet.
+
+Then, to run the tests, e.g.:
 
 ```
 metricfactory debug --config metricfactory/tests/100_100_infinite_pickle.yaml
 ```
 
 The only necessary tweaking should be changing the graphite server's ip address
+in the yaml file.
 
 To run multiple (8 in this example) instances in parallel (different processes)
 run
