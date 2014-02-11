@@ -1,4 +1,3 @@
 -e git+https://github.com/Lacrymology/wishbone.git@graphite-pickle#egg=wishbone
 -e git+https://github.com/smetj/metricfactory.git#egg=metricfactory
--e git+https://github.com/Lacrymology/graphite-stress-tests.git#egg=graphite-stress-tests
 
